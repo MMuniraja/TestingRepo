@@ -1,0 +1,100 @@
+trigger createTask on Opportunity (before insert, before update){<br><br>        
+List<Task> task = new List<Task>();<br>        <br>   
+     for (Integer i = 0; i < Trigger.new.size(); i++) 
+{<br>        <br>            
+task.add(new Task(<br>               
+          whatid=Trigger.new[i].Id,<br>        
+                 OwnerId=Trigger.new[i].OwnerId,<br>                       
+  Subject='First Contact '<br>                      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+trigger calculatecountofcontacts on contact (after insert, after update, after delete)
+{
+set<id> acids = new set<id>();
+   if(Trigger.isinsert)
+    {
+     for(contact c : Trigger.new)
+      {
+       acids.add(c.accountID);
+      }
+    } 
+if(trigger.isupdate)
+{
+for(contact c : trigger.new)
+{
+if(c.accountID!= trigger.oldmap.get(c.Id).accountID)
+{
+acids.add(c.accountID);
+acids.add(trigger.oldmap.get(c.Id).accountID);
+}
+}
+if(Trigger.isdelete)
+    {
+     for(contact c : Trigger.old)
+      {
+       acids.add(c.accountID);
+      }
+    } 
+list<Account> lstacc = new list<Account>();
+if(acids != null)
+lstacc = [select id , name,no_of_contacts__c, (select id from contacts) from account where Id IN : acids];
+list<Account> updateacc = new list<Account>();
+for(Account a: lstacc)
+{
+a.no_of_contacts__c = a.contacts.size();
+updateacc.add(a);
+}
+
+if(updateacc != null)
+update updateacc;
+}
+
+
+
+
+
+@istest
+public class calculatecountofcontactstest 
+{
+
+public static list<account> lstacc ;
+public testmethod void calculatecountofcontactstest()
+{
+account a = new account();
+a.name = name;
+a.billingcity = some name;
+
+contacts c = new contacts();
+c.name = name;
+...
+
+}
+test.starttest();
+
+list<Account> lstacc = new list<Account>();
+if(acids != null)
+lstacc = [select id , name,no_of_contacts__c, (select id from contacts) from account where Id IN : acids];
+list<Account> updateacc = new list<Account>();
+for(Account a: lstacc)
+{
+a.no_of_contacts__c = a.contacts.size();
+updateacc.add(a);
+}
+
+test.stoptest();
+}	
